@@ -12,13 +12,13 @@ os.environ['VOICE_MODEL'] = 'Elli' #
 os.environ['WHISPER_MODEL'] = 'base' #
 os.environ['WHISPER_CHOICE'] = 'TRANSCRIBE' #
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
-os.environ['VTUBE_STUDIO_API_PORT'] = 8001 #
+os.environ['VTUBE_STUDIO_API_PORT'] = "8001" #
 os.environ['GOOGLE_API_KEY'] = 'AIzaSyCEzc2NtaIa3eBMh5QNp1wDaeSCH0OrN-g'
 os.environ['GOOGLE_API_KEY'] = 'AIzaSyCEzc2NtaIa3eBMh5QNp1wDaeSCH0OrN-g'
+os.environ['OPENAI_API_KEY'] = "sk-************************************"
 
-from utils.LLM.Embedding import *
-from utils.LLM.Gemini import *
-from utils.LLM.GroqApi import *
+from utils.Model.GPT import *
+from utils.Model.Gemini import *
 
 import colorama
 import humanize, os, threading
@@ -56,24 +56,15 @@ modelOptions = {
 
 def main():
     chat_history = []
-    selected_model_id = modelOptions['LLaMA3 70b']
+    selected_model_id = modelOptions.get('Gemini__', 0)
 
     if selected_model_id == 'gemini-1.5-flash':
         chatModel = Gemini()
     else:
-        chatModel = Groq(model_path=selected_model_id)
-
-    Vectoriser = PDFVectoriser()
-    texts = Vectoriser.split_text(Vectoriser.extract_from_pdf("M:/Virtual_Avatar_ChatBot/utils/data/Data-combined.pdf"))
-    v_db = None
-    if not texts:
-        logging.info("No texts were extracted from the PDF.")
-    else:
-        v_db = Vectoriser.create_vector_db(texts)
-        if v_db is not None:
-            logging.info("Vector database created successfully!")
-        else:
-            logging.error("Failed to create vector database.")
+        chatModel = GPT()
+    
+    
+    
     if input_choice.lower() == "speech":
         import utils.transcriber_translate
         import utils.hotkeys
@@ -108,17 +99,9 @@ def main():
 
             logging.info(transcript.strip())
             combined_input = transcript
-            if v_db:
-                similar_context = Vectoriser.get_similar_context(transcript, 5, v_db)
-                for doc in similar_context:
-                    combined_input += doc.page_content
+            
             if CHATBOT_CHOICE == "oogabooga":
-                message = ''
-                for response in chatModel.generate(combined_input, 'en'):
-                    if response is None:
-                        break
-                    message += response
-                
+                message = chatModel.generate(combined_input, 'en')
             else:
                 logging.error("Sorry Wrong Chatbot Choice")
                 
@@ -195,6 +178,7 @@ def main():
 def run_program():
     # Start the VTube Studio interaction in a separate thread
     vtube_studio_thread = threading.Thread(target=utils.vtube_studio.run_vtube_studio)
+    print('vtube thread run successfully')
     vtube_studio_thread.daemon = True
     vtube_studio_thread.start()
 
