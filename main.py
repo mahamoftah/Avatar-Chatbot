@@ -19,6 +19,7 @@ os.environ['OPENAI_API_KEY'] = "sk-************************************"
 
 from utils.Model.GPT import *
 from utils.Model.Gemini import *
+from utils.processing import *
 
 import colorama
 import humanize, os, threading
@@ -104,6 +105,7 @@ def main():
                 message = chatModel.generate(combined_input, 'en')
             else:
                 logging.error("Sorry Wrong Chatbot Choice")
+            
                 
             chat_history.append({'role': 'bot', 'content' : message})
             if TTS_CHOICE == "GTTS_API":
@@ -146,6 +148,8 @@ def main():
                     message += response
             else:
                 logging.error("Sorry Wrong Chatbot Choice")
+           
+            message = postprocessing(message)
 
             if TTS_CHOICE == "ELEVENLABS":
                 import utils.GTTS_API
