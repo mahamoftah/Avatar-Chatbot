@@ -1,0 +1,21 @@
+#Enter your input choice || Speech or Text
+INPUT_CHOICE=Speech
+
+#Enter your desired chatbot || oogabooga 
+CHATBOT_SERVICE=oogabooga
+
+
+#Enter your Text to Speech Choice LOCAL_TTS | GTTS_API is out of support now,I will add it after fixing the problem
+TTS_CHOICE = LOCAL_TTS
+
+# if ELEVENLAB is chosen , set ELEVENLAB_KEY , VOICE_MODEL  and VOICE_ID
+
+#Do you have GPU/CUDA, if yes then write True else write False
+CUDA_STATUS=True
+
+
+#Enter your whisper model, see VRAM requirement for further details at whisper Github | tiny, base, small
+WHISPER_MODEL=base
+
+#Want to speak in english or your native language | TRANSCRIBE, TRANSLATE
+WHISPER_CHOICE=TRANSCRIBE
