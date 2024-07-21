@@ -8,6 +8,9 @@ def postprocessing(text):
         pattern = re.compile(r'[*#,!?$@:;]')
         text = pattern.sub('', text)
 
+        for pattern in ['The provided text mentions that', 'Based on the provided text', 'According to the provided text', 'The provided text states that', 'The provided text', 'The text you provided lists', 'The text you provided', 'The information you provided']:
+            text = re.sub(pattern, '' , text)
+
         pattern = re.compile(
             "["
             "\U0001F600-\U0001F64F"
@@ -25,4 +28,4 @@ def postprocessing(text):
         
         text = pattern.sub(' ', text)
 
-        return text
+        return text.strip()

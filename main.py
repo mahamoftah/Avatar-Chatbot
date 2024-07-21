@@ -7,15 +7,14 @@ os.environ['CHATBOT_SERVICE'] = 'oogabooga'
 os.environ['TTS_CHOICE'] = 'LOCAL_TTS' #
 os.environ['VOICE_ID'] = 'pNInz6obpgDQGcFmaJgB' #
 os.environ['CUDA_STATUS'] = 'True' #
-os.environ['ELEVENLAB_KEY'] = 'sk_1ac3e847f87703dc6276f75566a98c1bc22cba602890bad9' #
+os.environ['ELEVENLAB_KEY'] = 'sk_73c2d983c6ac7e9a1bbf6711bebd5e9d7a99cdde59904cf3' #
 os.environ['VOICE_MODEL'] = 'Elli' #
 os.environ['WHISPER_MODEL'] = 'base' #
 os.environ['WHISPER_CHOICE'] = 'TRANSCRIBE' #
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 os.environ['VTUBE_STUDIO_API_PORT'] = "8001" #
 os.environ['GOOGLE_API_KEY'] = 'AIzaSyCEzc2NtaIa3eBMh5QNp1wDaeSCH0OrN-g'
-os.environ['GOOGLE_API_KEY'] = 'AIzaSyCEzc2NtaIa3eBMh5QNp1wDaeSCH0OrN-g'
-os.environ['OPENAI_API_KEY'] = "sk-************************************"
+# os.environ['OPENAI_API_KEY'] = "sk-************************************"
 
 from utils.Model.GPT import *
 from utils.Model.Gemini import *
@@ -62,7 +61,7 @@ def main():
     if selected_model_id == 'gemini-1.5-flash':
         chatModel = Gemini()
     else:
-        chatModel = GPT()
+        chatModel = Gemini()
     
     
     
@@ -102,7 +101,8 @@ def main():
             combined_input = transcript
             
             if CHATBOT_CHOICE == "oogabooga":
-                message = chatModel.generate(combined_input, 'en')
+                message = chatModel.gemini_chat(combined_input)
+                message = postprocessing(message)
             else:
                 logging.error("Sorry Wrong Chatbot Choice")
             
